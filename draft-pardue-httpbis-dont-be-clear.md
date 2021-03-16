@@ -61,17 +61,21 @@ chances of accidental aliasing with the "clear" keyword.
 
 # Aliasing and Avoidance
 
-{{ALTSVC}} Section 3 defines the Alt-Svc header field defined in ABNF. The value
-can either be the keyword "clear", or an `alt-value` which includes an encoded
-ALPN protocol identifier.
+{{ALTSVC}} Section 3 defines the Alt-Svc header field using ABNF. It requires a
+custom parser, which introduces a possibility for custom implementation errors.
+The Alt-Svc header field value can either be the keyword "clear" - a special
+value that invalidates cached alternative services, or a list of `alt-value`,
+that includes an encoded ALPN protocol identifier {{ALPN}}. There is a chance
+that someone unwittingly defines the ALPN protocol identifier "clear" for
+genuine purposes but is unaware of the use of protocol identifiers in
+Alternative Services. This could trigger Alt-Svc parser errors that might
+lead to confusion between the keyword with the protocol identifier use. Since
+the "clear" keyword has special meaning, confusion might lead to detrimental
+effects.
 
-The Alt-Svc header field requires a custom parser, which introduces a
-possibility for implementation failure. There is a chance that someone defines the ALPN
-protocol identifier "clear", which could lead to a naive parser confusing the too. The "clear" keyword is a special value which invalidates cached alternative services. Confusion between keyword and protocol identifier might lead to detrimental effects.
-
-To prevent unintented aliasing, this document registers the "clear" ALPN
-protocol identifier and which relates to no application-layer protocol,
-effectively reserving it and preventing any unintended aliasing.
+To prevent unintended aliasing, this document registers the "clear" ALPN
+protocol identifier. It relates to no actual application-layer protocol,
+effectively reserving the code point and preventing any unintended aliasing.
 
 # Security Considerations {#security}
 
